@@ -8,7 +8,7 @@
 /**
  * AMP disabled value.
  */
-const AMP_DISABLED = 0;
+define('AMP_DISABLED', 0);
 
 /**
  * Return TRUE if the node has amp enabled.

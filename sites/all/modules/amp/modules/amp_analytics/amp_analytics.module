@@ -75,7 +75,7 @@ function amp_analytics_element_info() {
   // AMP Analytics element
   $types['amp_analytics'] = array(
     '#account' => NULL,
-    '#analytics_attributes_array' => [],
+    '#analytics_attributes_array' => array(),
     '#pre_render' => array('_amp_analytics_pre_render'),
     '#theme' => 'amp_analytics',
   );

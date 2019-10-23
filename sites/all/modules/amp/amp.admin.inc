@@ -309,7 +309,7 @@ function amp_admin_metadata_form($form, &$form_state) {
       <p>Name of the publisher of the content. Typically, this can be the same as the site name.</p>
       <p>Suggested token: [site:name]</p>'),
     '#required' => TRUE,
-    '#attributes' => ['placeholder' => '[site:name]'],
+    '#attributes' => array('placeholder' => '[site:name]'),
     '#default_value' => variable_get('amp_metadata_organization_name', NULL)
   );
 
@@ -386,7 +386,8 @@ function amp_admin_metadata_form_submit($form, &$form_state) {
     if ($old_file) {
       file_usage_delete($old_file, 'amp', 'logo', 1);
       // Only delete a file if it is the only place it is in use.
-      if (empty(file_usage_list($old_file))) {
+      $file_usage = file_usage_list($old_file);
+      if (empty($file_usage)) {
         file_delete($old_file);
       }
     }

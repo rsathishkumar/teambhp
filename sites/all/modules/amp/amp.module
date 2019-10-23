@@ -490,7 +490,7 @@ function amp_form_node_type_form_alter(&$form, &$form_state, $form_id) {
           <p>A short headline for an AMP article, using fewer than 110 characters and no HTML markup.</p>
           <p>Use tokens to provide the correct headline for each article page. Suggested token: [node:title].'
           );
-          $form_options['amp_metadata_config_' . $name]['#attributes'] = ['placeholder' => '[node:title]'];
+          $form_options['amp_metadata_config_' . $name]['#attributes'] = array('placeholder' => '[node:title]');
           break;
         case 'datePublished':
           $form_options['amp_metadata_config_' . $name]['#title'] = 'Date published';
@@ -498,7 +498,7 @@ function amp_form_node_type_form_alter(&$form, &$form_state, $form_id) {
           <p>The date an article was published.</p>
           <p>Use tokens to provide the correct published date for each article. Suggested token: [node:created].'
           );
-          $form_options['amp_metadata_config_' . $name]['#attributes'] = ['placeholder' => '[node:created]'];
+          $form_options['amp_metadata_config_' . $name]['#attributes'] = array('placeholder' => '[node:created]');
           break;
         case 'dateModified':
           $form_options['amp_metadata_config_' . $name]['#title'] = 'Date modified';
@@ -506,7 +506,7 @@ function amp_form_node_type_form_alter(&$form, &$form_state, $form_id) {
           <p>The date an article was most recently modified date.</p>
           <p>Use tokens to provide the correct modification date for each article. Suggested token: [node:changed].'
           );
-          $form_options['amp_metadata_config_' . $name]['#attributes'] = ['placeholder' => '[node:changed]'];
+          $form_options['amp_metadata_config_' . $name]['#attributes'] = array('placeholder' => '[node:changed]');
           break;
         case 'author':
           $form_options['amp_metadata_config_' . $name]['#title'] = 'Author';
@@ -514,7 +514,7 @@ function amp_form_node_type_form_alter(&$form, &$form_state, $form_id) {
           <p>The name of the author to use on AMP pages.</p>
           <p>Use tokens to provide the correct author for each article. Token output should be text only, no HTML markup. Suggested token: [node:author:name].'
           );
-          $form['amp_metadata_config_' . $name]['#attributes'] = ['placeholder' => '[node:author:name]'];
+          $form['amp_metadata_config_' . $name]['#attributes'] = array('placeholder' => '[node:author:name]');
           break;
         case 'description':
           $form_options['amp_metadata_config_' . $name]['#title'] = 'Article description';
@@ -522,7 +522,7 @@ function amp_form_node_type_form_alter(&$form, &$form_state, $form_id) {
           <p>A short description of an AMP article, using fewer than 150 characters and no HTML markup.</p>
           <p>Use tokens to provide the correct description for each article. Suggested token: [node:summary].'
           );
-          $form_options['amp_metadata_config_' . $name]['#attributes'] = ['placeholder' => '[node:summary]'];
+          $form_options['amp_metadata_config_' . $name]['#attributes'] = array('placeholder' => '[node:summary]');
           break;
         case 'image':
           $form_options['amp_metadata_config_' . $name]['#title'] = 'Article image for carousel';
@@ -532,7 +532,7 @@ function amp_form_node_type_form_alter(&$form, &$form_state, $form_id) {
           <p>Use tokens to provide the correct image for each article. Example token: [node:field_image]. The image field token likely varies by content type.',
             array('@image_guidelines' => 'https://developers.google.com/search/docs/data-types/articles#article_types')
           );
-          $form_options['amp_metadata_config_' . $name]['#attributes'] = ['placeholder' => '[node:field_image]'];
+          $form_options['amp_metadata_config_' . $name]['#attributes'] = array('placeholder' => '[node:field_image]');
           break;
         case 'imageStyle':
           $form_options['amp_metadata_config_' . $name]['#title'] = 'Article image style';
@@ -697,12 +697,13 @@ function amp_node_view($node, $view_mode, $langcode) {
         if (substr($image_url, 0, strlen($public_stream_base_url)) == $public_stream_base_url) {
           $image_uri = file_build_uri(substr($image_url, strlen($public_stream_base_url)));
         }
-
+	$image_style_id = $metadata['amp_metadata_config_imageStyle'];
         if (!empty($image_url) && !empty($image_uri)) {
-          if (!isset($metadata['amp_metadata_config_imageStyle']) || empty($image_style_id = $metadata['amp_metadata_config_imageStyle'])) {
+          if (!isset($metadata['amp_metadata_config_imageStyle']) || empty($image_style_id)) {
             $image_style_id = '';
           }
-          if (!empty($image_info = _amp_get_image_information($image_url, $image_uri, $image_style_id))) {
+	  $image_info = _amp_get_image_information($image_url, $image_uri, $image_style_id);
+          if (!empty($image_info)) {
             $metadata_json[$name] = array(
               '@type' => 'ImageObject',
               'url' => $image_info['url'],
@@ -727,7 +728,8 @@ function amp_node_view($node, $view_mode, $langcode) {
       $logo_url = file_create_url($logo_uri);
       if (!empty($logo_url) && !empty($logo_uri)) {
         $logo_style_id = variable_get('amp_metadata_organization_logo_image_style_id', '');
-        if (!empty($logo_info = _amp_get_image_information($logo_url, $logo_uri, $logo_style_id))) {
+	        $logo_info = _amp_get_image_information($logo_url, $logo_uri, $logo_style_id);
+	if (!empty($logo_info)) {
           $metadata_json['publisher']['logo'] = array(
             '@type' => 'ImageObject',
             'url' => $logo_info['url'],
@@ -741,11 +743,7 @@ function amp_node_view($node, $view_mode, $langcode) {
     drupal_alter('amp_metadata', $metadata_json, $node, $type);
 
     // Replace the tokens.
-    array_walk_recursive($metadata_json, function(&$value) use ($node) {
-      $value = strip_tags(token_replace($value, ['node' => $node]));
-      $value = str_replace("\n", "", $value);
-      $value = str_replace("\r", "", $value);
-    });
+    array_walk_recursive($metadata_json, 'arrayrecursivefunction');
 
     $element = array(
       '#tag' => 'script',
@@ -758,6 +756,12 @@ function amp_node_view($node, $view_mode, $langcode) {
     drupal_add_html_head($element, 'amp_metadata');
   }
 }
+
+function arrayrecursivefunction(&$value, $node) {
+      $value = strip_tags(token_replace($value, array('node' => $node)));
+      $value = str_replace("\n", "", $value);
+      $value = str_replace("\r", "", $value);
+    }
 
 /**
  * Implements hook_block_info().
