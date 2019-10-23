@@ -2,7 +2,7 @@ name = AMP Carousel
 core = 7.x
 description = AMP Carousel field formatter for images
 
-dependencies[] = amp
+dependencies[] = custom_amp
 dependencies[] = views
 
 files[] = amp_carousel_style_plugin.inc
