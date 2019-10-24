@@ -1151,7 +1151,7 @@ function amp_field_formatter_view($entity_type, $entity, $field, $instance, $lan
         if (isset($_GET['warnfix']) || variable_get('amp_library_warnings_display', false)) {
           $element[$delta]['#markup'] .= '<pre>' . $amp_content['amp_warnings'] . '</pre>';
         }
-      //  amp_add_component_libraries($amp_content['amp_components']);
+        amp_add_component_libraries($amp_content['amp_components']);
       }
       break;
 
@@ -1278,13 +1278,12 @@ function _amp_create_amp_converter() {
  *   - amp_components: An array of AMP JS components.
  */
 function _amp_convert_markup_to_amp($markup) {
-  return $markup;
-  $amp = _amp_create_amp_converter();
-  $amp->loadHtml($markup);
+//  $amp = _amp_create_amp_converter();
+//  $amp->loadHtml($markup);
   $amp_content = array(
-    'amp_markup' => $amp->convertToAmpHtml(),
-    'amp_warnings' => $amp->warningsHumanHtml(),
-    'amp_components' => $amp->getComponentJs()
+    'amp_markup' => $markup,
+    'amp_warnings' => array(),
+    'amp_components' => array()
   );
 
   return $amp_content;
