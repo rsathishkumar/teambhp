@@ -1,5 +1,5 @@
 <?php
-$con=mysqli_connect("localhost","root","root",'teambhp_site');
+$con=mysqli_connect("localhost","root","",'teambhp_site');
 if(!$con)
 	{
 	echo "Error in connectivity";
