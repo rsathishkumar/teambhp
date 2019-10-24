@@ -252,7 +252,7 @@ $(function(){
 								}
 
 					}
-            $con=mysqli_connect("localhost","root","root",'teambhp_site');
+            $con=mysqli_connect("localhost","root","",'teambhp_site');
 										$limit = 10;
 										$slice = 9;
 										$start = 1;
