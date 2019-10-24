@@ -56,9 +56,9 @@ function bmp_ampsubtheme_preprocess_node(&$vars) {
 function time_elapsed_string($datetime, $full = false) {
   $now = new DateTime;
   $ago = new DateTime($datetime);
-  $diff = $now->diff($ago);
+  $diff = round(($now->format('U') - $ago->format('U')) / (60*60*24));
 
-  $diff->w = floor($diff->d / 7);
+  $diff-w = floor($diff->d / 7);
   $diff->d -= $diff->w * 7;
 
   $string = array(
