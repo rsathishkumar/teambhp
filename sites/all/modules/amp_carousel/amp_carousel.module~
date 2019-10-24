@@ -61,6 +61,7 @@ function amp_carousel_theme() {
  */
 function theme_amp_carousel($vars) {
   $files = array();
+print_r($vars['items']); exit;
   foreach ($vars['items'] as $file) {
     $file_source = $file['uri'];
     $attributes['src'] = file_create_url($file_source);
@@ -138,7 +139,7 @@ function amp_carousel_field_formatter_view($entity_type, $entity, $field, $insta
 function amp_carousel_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  $summary = [];
+  $summary = array();
 
   if (strpos($display['type'], 'amp_carousel') !== FALSE) {
 

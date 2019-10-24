@@ -17,7 +17,7 @@ function bmp_ampsubtheme_preprocess_html(&$variables) {
   $res = array(
     '#tag' => 'script',
     '#attributes' => array(
-   //   'src' => 'https://cdn.ampproject.org/v0/amp-carousel-0.1.js',
+     // 'src' => 'https://cdn.ampproject.org/v0/amp-carousel-0.1.js',
      // 'custom-element' =>"amp-carousel",
       'async' => 'async'
     ),
@@ -58,7 +58,7 @@ function time_elapsed_string($datetime, $full = false) {
   $ago = new DateTime($datetime);
   $diff = round(($now->format('U') - $ago->format('U')) / (60*60*24));
 
-  $diff-w = floor($diff->d / 7);
+  $diff->w = floor($diff->d / 7);
   $diff->d -= $diff->w * 7;
 
   $string = array(
