@@ -1,0 +1,10 @@
+name = AMP Tests
+description = Helper module to run tests
+core = 7.x
+dependencies[] = custom_amp
+
+; Information added by Drupal.org packaging script on 2018-11-01
+version = "7.x-1.1"
+core = "7.x"
+project = "amp"
+datestamp = "1541034798"
